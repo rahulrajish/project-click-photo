@@ -6,7 +6,3 @@ secret: ${env:PRISMA_MANAGEMENT_API_SECRET}
 generate:
   - generator: javascript-client
     output: ./generated/prisma-client/
-
-hooks:
-  post-deploy:
-    - prisma generate
