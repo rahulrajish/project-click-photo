@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 import { combineResolvers, skip } from 'graphql-resolvers';
+import uploadFile from '../fileApi';
 
 const userIsAuthenticated = (parent, args, { me }) => {
     return me ? skip : new Error('Not Authenticated');
@@ -41,13 +42,13 @@ export default {
         file: combineResolvers(
             userIsAuthenticated,
             async (parent, { id }, { prisma }) => {
-            return await prisma.file({ id });
-        }),
+                return await prisma.file({ id });
+            }),
         files: combineResolvers(
             userIsAuthenticated,
             async (parent, args, { prisma }) => {
-            return await prisma.files(args);
-        }),
+                return await prisma.files(args);
+            }),
     },
     Mutation: {
         signUp: async (parent, { email, password }, { prisma }) => {
@@ -63,11 +64,14 @@ export default {
                 throw new Error(error);
             }
         },
-        renameFile: async (parent, {id, name}, { prisma }) => {
-            return await prisma.updateFiles({data : {name}, where: {id}});
+        renameFile: async (parent, { id, name }, { prisma }) => {
+            return await prisma.updateFiles({ data: { name }, where: { id } });
         },
-        deleteFile: async (parent, {id}, { prisma }) => {
-            return await prisma.deleteFiles({where : {id}}, info);
+        deleteFile: async (parent, { id }, { prisma }) => {
+            return await prisma.deleteFiles({ where: { id } }, info);
+        },
+        addFile: async (parent, args, { prisma }) => {
+            return await uploadFile(args, prisma);
         }
     }
 }
