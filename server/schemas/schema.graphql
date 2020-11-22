@@ -1,0 +1,35 @@
+scalar DateTime
+
+type User {
+    id: ID!
+    email: String!
+}
+
+type File {
+    id: ID!
+    name: String!
+    size: Int!
+    secret: String!
+    contentType: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    url: String!
+}
+
+type Token {
+    token: String!
+}
+
+type Query {
+    signIn(email: String!, password: String!): Token!
+    getUser(id: ID!): User!
+    me: User!
+    file (id: ID!): File
+    files: [File!]!
+}
+
+type Mutation {
+    signUp(email: String!, password: String!): Token
+    renameFile(id:ID!, name: String!): File
+    deleteFile(id:ID!): File
+}
